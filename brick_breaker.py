@@ -15,6 +15,27 @@ import pygame
 from pygame.locals import *
 import time
 
+class PyGameWindowView(object):
+    """ A view of brick breaker rendered in a Pygame window """
+    def __init__(self, model, size):
+        """ Initialize the view with a reference to the model and the
+            specified game screen dimensions (represented as a tuple
+            containing the width and height """
+        self.model = model
+        self.screen = pygame.display.set_mode(size)
+
+    def draw(self):
+        """ Draw the current game state to the screen """
+        self.screen.fill(pygame.Color(0,0,0))
+        for brick in self.model.bricks:
+            pygame.draw.rect(self.screen,
+                             pygame.Color(255, 255, 255),
+                             pygame.Rect(brick.x,
+                                         brick.y,
+                                         brick.width,
+                                         brick.height))
+        pygame.display.update()
+
 class BrickBreakerModel(object):
     """ Encodes a model of the game state """
     def __init__(self):
@@ -47,16 +68,17 @@ if __name__ == '__main__':
     pygame.init()
 
     size = (640, 480)
-    screen = pygame.display.set_mode(size)
 
     model = BrickBreakerModel()
     print(model)
+    view = PyGameWindowView(model, size)
 
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
+        view.draw()
         time.sleep(.001)
 
     pygame.quit()
