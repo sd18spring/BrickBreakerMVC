@@ -110,6 +110,16 @@ class Paddle(object):
                                                            self.x,
                                                            self.y)
 
+class PyGameMouseController(object):
+    """ A controller that uses the mouse to move the paddle """
+    def __init__(self,model):
+        self.model = model
+
+    def handle_event(self,event):
+        """ Handle the mouse event so the paddle tracks the mouse position """
+        if event.type == MOUSEMOTION:
+            self.model.paddle.x = event.pos[0] - self.model.paddle.width/2.0
+
 class PyGameKeyboardController(object):
     """ Handles keyboard input for brick breaker """
     def __init__(self,model):
@@ -132,7 +142,8 @@ if __name__ == '__main__':
     model = BrickBreakerModel(size)
     print(model)
     view = PyGameWindowView(model, size)
-    controller = PyGameKeyboardController(model)
+    #controller = PyGameKeyboardController(model)
+    controller = PyGameMouseController(model)
 
     running = True
     while running:
