@@ -110,6 +110,20 @@ class Paddle(object):
                                                            self.x,
                                                            self.y)
 
+class PyGameKeyboardController(object):
+    """ Handles keyboard input for brick breaker """
+    def __init__(self,model):
+        self.model = model
+
+    def handle_event(self,event):
+        """ Left and right presses modify the x velocity of the paddle """
+        if event.type != KEYDOWN:
+            return
+        if event.key == pygame.K_LEFT:
+            self.model.paddle.vx += -1.0
+        if event.key == pygame.K_RIGHT:
+            self.model.paddle.vx += 1.0
+
 if __name__ == '__main__':
     pygame.init()
 
@@ -118,12 +132,14 @@ if __name__ == '__main__':
     model = BrickBreakerModel(size)
     print(model)
     view = PyGameWindowView(model, size)
+    controller = PyGameKeyboardController(model)
 
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
+            controller.handle_event(event)
         model.update()
         view.draw()
         time.sleep(.001)
